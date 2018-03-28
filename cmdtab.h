@@ -59,6 +59,8 @@ void cmdtab_free(cmdtab_t* table);
 
 const cmdtab_item_t* cmdtab_search(const cmdtab_t* table, const char *cmdname);
 
+const cmdtab_item_t* cmdtab_subsearch(const cmdtab_t* table, char *namepart);
+
 
 
 

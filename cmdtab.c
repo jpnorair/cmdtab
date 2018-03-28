@@ -141,7 +141,48 @@ int cmdtab_add(cmdtab_t* table, const char* name, void* action, void* bundle) {
 
 
 const cmdtab_item_t* cmdtab_search(const cmdtab_t* table, const char *cmdname) {
-	return cmdtab_search_insert(table, cmdname, false);
+///@note cmdtab_search_insert takes a non-const cmdtab_t*, but if the "do_insert"
+///      argument is false, it will not modify the table in any way.
+	return cmdtab_search_insert((cmdtab_t*)table, cmdname, false);
+}
+
+
+
+const cmdtab_item_t* cmdtab_subsearch(const cmdtab_t* table, char *namepart) {
+
+    if (*namepart != 0) {
+        int len = (int)strlen(namepart);
+
+        // try to find single match
+        int l   = 0;
+        int r   = (int)table->size - 1;
+        int lr  = -1;
+        int rr  = -1;
+        int cci;
+        int csc;
+        
+        while(r >= l) {
+            cci = (l + r) >> 1;
+            csc = local_strcmpc((char*)table->cmd[cci]->name, namepart, len);
+            
+            switch (csc) {
+                case -1: r = cci - 1; break;
+                case  1: l = cci + 1; break;
+                    
+                // check for matches left and right
+                default:
+                    if (cci > 0) {
+                        lr = local_strcmpc((char*)table->cmd[cci-1]->name, namepart, len);
+                    }
+                    if (cci < (table->size-1)) {
+                        rr = local_strcmpc((char*)table->cmd[cci+1]->name, namepart, len);
+                    }
+                    return (lr & rr) ? table->cmd[cci] : NULL;
+            }
+        }
+    }
+        
+    return NULL;
 }
 
 

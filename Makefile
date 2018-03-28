@@ -3,8 +3,9 @@ CC=gcc
 THISMACHINE := $(shell uname -srm | sed -e 's/ /-/g')
 THISSYSTEM	:= $(shell uname -s)
 
+VERSION     ?= "0.1.0"
 TARGETLIB   ?= libcmdtab.$(THISSYSTEM).a
-TARGETDIR   ?= ./../_hbpkg/$(THISMACHINE)/cmdtab
+PACKAGEDIR  ?= ./../_hbpkg/$(THISMACHINE)/cmdtab.$(VERSION)
 
 SRCDIR      := .
 INCDIR      := .
@@ -33,9 +34,11 @@ remake: cleaner all
 	
 #Make the Directories
 install:
-	mkdir -p $(TARGETDIR)
-	cp ./cmdtab.h $(TARGETDIR)
-	cp $(PRODUCTDIR)/* $(TARGETDIR)
+	@mkdir -p $(PACKAGEDIR)
+	@cp ./cmdtab.h $(PACKAGEDIR)
+	@cp $(PRODUCTDIR)/* $(PACKAGEDIR)
+	@rm -rf $(PACKAGEDIR)/../cmdtab
+	@ln -s cmdtab.$(VERSION) ./$(PACKAGEDIR)/../cmdtab
 
 
 #Copy Resources from Resources Directory to Target Directory
