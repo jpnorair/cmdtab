@@ -100,7 +100,7 @@ void cmdtab_free(cmdtab_t* table) {
 
 
 
-int cmdtab_add(cmdtab_t* table, const char* name, void* action, void* bundle) {
+int cmdtab_add(cmdtab_t* table, const char* name, void* action, void* extcmd) {
 	cmdtab_item_t* newcmd;
 	
 	if ((table == NULL) || (name == NULL)) {
@@ -128,7 +128,7 @@ int cmdtab_add(cmdtab_t* table, const char* name, void* action, void* bundle) {
 	
 	if (newcmd != NULL) {
 		newcmd->action = action;
-		newcmd->bundle = bundle;
+		newcmd->extcmd = extcmd;
 		return 0;
 	}
 	
@@ -271,7 +271,7 @@ cmdtab_item_t* cmdtab_search_insert(cmdtab_t* table, const char *cmdname, bool d
         	// Add the new command item at the output pointer
 			output->name    = newcmd_name;
 			output->action  = NULL;
-			output->bundle  = NULL;
+			output->extcmd  = NULL;
         }
     }
     
@@ -299,27 +299,27 @@ int main(void) {
     const cmdtab_item_t* cmditem;
 	int rc;
  
-    // Some bundles to use with the test
-    int bundle0[2] = {0, 1};
-    int bundle1[2] = {2, 3};
-    int bundle2[2] = {4, 5};
-    int bundle3[2] = {6, 7};
-    int bundle4[2] = {8, 9};
-    int bundle5[2] = {10, 11};
-    int bundle6[2] = {12, 13};
+    // Some extcmds to use with the test
+    int extcmd0[2] = {0, 1};
+    int extcmd1[2] = {2, 3};
+    int extcmd2[2] = {4, 5};
+    int extcmd3[2] = {6, 7};
+    int extcmd4[2] = {8, 9};
+    int extcmd5[2] = {10, 11};
+    int extcmd6[2] = {12, 13};
     
 	
 	rc = cmdtab_init(&table);
 	printf("cmdtab_init() returns %d\n", rc);
 
-    printf("Test1: adding 7 commands with different bundles, unique names\n");
-    cmdtab_add(&table, "abc", NULL, bundle0);
-    cmdtab_add(&table, "oepd", NULL, bundle1);
-    cmdtab_add(&table, "m.pyd", NULL, bundle2);
-    cmdtab_add(&table, "bepxk", NULL, bundle3);
-    cmdtab_add(&table, "rthuee", NULL, bundle4);
-    cmdtab_add(&table, "srchke", NULL, bundle5);
-    cmdtab_add(&table, "ouiddf", NULL, bundle6);
+    printf("Test1: adding 7 commands with different extcmds, unique names\n");
+    cmdtab_add(&table, "abc", NULL, extcmd0);
+    cmdtab_add(&table, "oepd", NULL, extcmd1);
+    cmdtab_add(&table, "m.pyd", NULL, extcmd2);
+    cmdtab_add(&table, "bepxk", NULL, extcmd3);
+    cmdtab_add(&table, "rthuee", NULL, extcmd4);
+    cmdtab_add(&table, "srchke", NULL, extcmd5);
+    cmdtab_add(&table, "ouiddf", NULL, extcmd6);
     
     cmditem = cmdtab_search(&table, "abc");
     if (cmditem == NULL) {
@@ -327,8 +327,8 @@ int main(void) {
     }
     else {
         printf("\"abc\" was found\n");
-        printf("    cmd->bundle[0] = %d\n", ((int*)cmditem->bundle)[0]);
-        printf("    cmd->bundle[1] = %d\n", ((int*)cmditem->bundle)[1]);
+        printf("    cmd->extcmd[0] = %d\n", ((int*)cmditem->extcmd)[0]);
+        printf("    cmd->extcmd[1] = %d\n", ((int*)cmditem->extcmd)[1]);
     }
     
     

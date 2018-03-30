@@ -39,7 +39,7 @@
 typedef struct {
 	char*   name; 
 	void*   action; 
-	void*   bundle;
+	void*   extcmd;
 } cmdtab_item_t;
 
 typedef struct {
@@ -53,7 +53,7 @@ typedef struct {
 
 int cmdtab_init(cmdtab_t* table);
 
-int cmdtab_add(cmdtab_t* table, const char* name, void* action, void* bundle);
+int cmdtab_add(cmdtab_t* table, const char* name, void* action, void* extcmd);
 
 void cmdtab_free(cmdtab_t* table);
 
