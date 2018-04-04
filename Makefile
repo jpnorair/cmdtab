@@ -28,8 +28,8 @@ OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJE
 
 
 
-
-all: resources $(TARGETLIB)
+all: lib
+lib: resources $(TARGETLIB)
 remake: cleaner all
 	
 #Make the Directories
@@ -80,6 +80,6 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
 
 #Non-File Targets
-.PHONY: all remake clean cleaner resources
+.PHONY: all lib remake clean cleaner resources
 
 
