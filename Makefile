@@ -3,14 +3,25 @@ CC=gcc
 THISMACHINE := $(shell uname -srm | sed -e 's/ /-/g')
 THISSYSTEM	:= $(shell uname -s)
 
-VERSION     ?= "0.1.0"
-TARGETLIB   ?= libcmdtab.$(THISSYSTEM).a
+VERSION     ?= 0.1.0
 PACKAGEDIR  ?= ./../_hbpkg/$(THISMACHINE)/cmdtab.$(VERSION)
+
+ifeq ($(THISSYSTEM),Darwin)
+# Mac can't do conditional selection of static and dynamic libs at link time.
+#	PRODUCTS := libcmdtab.dylib libcmdtab.a
+	PRODUCTS := libcmdtab.$(THISSYSTEM).a
+	
+else ifeq ($(THISSYSTEM),Linux)
+	PRODUCTS := libcmdtab.$(THISSYSTEM).so libcmdtab.$(THISSYSTEM).a
+	
+else
+	error "THISSYSTEM set to unknown value: $(THISSYSTEM)"
+endif
 
 SRCDIR      := .
 INCDIR      := .
-BUILDDIR    := build
-PRODUCTDIR  := bin
+BUILDDIR    := build/$(THISMACHINE)
+PRODUCTDIR  := bin/$(THISMACHINE)
 RESDIR      := 
 SRCEXT      := c
 DEPEXT      := d
@@ -29,7 +40,7 @@ OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJE
 
 
 all: lib
-lib: resources $(TARGETLIB)
+lib: resources $(PRODUCTS)
 remake: cleaner all
 	
 #Make the Directories
@@ -68,6 +79,10 @@ libcmdtab.Darwin.a: $(OBJECTS)
 libcmdtab.Linux.a: $(OBJECTS)
 	ar -rcs $(PRODUCTDIR)/libcmdtab.a $(OBJECTS)
 	ranlib $(PRODUCTDIR)/libcmdtab.a
+
+#Build Dynamic Library
+libcmdtab.Linux.so: $(OBJECTS)
+	$(CC) -shared -fPIC -Wl,-soname,libcmdtab.so.1 -o $(PRODUCTDIR)/libcmdtab.so.$(VERSION) $(OBJECTS) -lc
 
 #Compile
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
