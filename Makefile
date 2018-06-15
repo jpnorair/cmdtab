@@ -50,7 +50,7 @@ install:
 	@cp $(PRODUCTDIR)/* $(PACKAGEDIR)
 	@rm -rf $(PACKAGEDIR)/../cmdtab
 	@ln -s cmdtab.$(VERSION) ./$(PACKAGEDIR)/../cmdtab
-
+	cd ../_hbsys && $(MAKE) sys_install INS_MACHINE=$(THISMACHINE) INS_PKGNAME=cmdtab
 
 #Copy Resources from Resources Directory to Target Directory
 resources: directories
