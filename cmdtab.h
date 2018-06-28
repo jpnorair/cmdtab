@@ -61,7 +61,7 @@ const cmdtab_item_t* cmdtab_search(const cmdtab_t* table, const char *cmdname);
 
 const cmdtab_item_t* cmdtab_subsearch(const cmdtab_t* table, char *namepart);
 
-
+int cmdtab_list(cmdtab_t* table, char* dst, size_t dstmax);
 
 
 #endif

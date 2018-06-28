@@ -142,11 +142,11 @@ int cmdtab_list(cmdtab_t* table, char* dst, size_t dstmax) {
     
     for (i=0; i<table->size; i++) {
         int name_size;
-        name_size   = strlen(table->cmd[i].name);
+        name_size   = strlen(table->cmd[i]->name);
         chars_out  += name_size;
         
         if (chars_out < dstmax) {
-            dst     = stpncpy(dst, table->cmd[i].name, name_size);
+            dst     = stpncpy(dst, table->cmd[i]->name, name_size);
             dst[0]  = '\n';
             dst++;
         }
