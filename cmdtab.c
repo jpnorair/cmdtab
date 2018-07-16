@@ -255,16 +255,18 @@ cmdtab_item_t* cmdtab_search_insert(cmdtab_t* table, const char *cmdname, bool d
         	char* newcmd_name;
         
         	// Allocate the new command name
+            // Be sure to add space (+1) for string terminator, and place it
         	newcmd_len = strlen(cmdname);
 			if (newcmd_len > CMDTAB_NAME_MAX) {
 				newcmd_len = CMDTAB_NAME_MAX;
 			}
-        	newcmd_name = malloc(newcmd_len);
+        	newcmd_name = malloc(newcmd_len+1);
         	if (newcmd_name == NULL) {
         		return NULL;
         	}
+            newcmd_name[newcmd_len] = 0;
 			strncpy(newcmd_name, cmdname, newcmd_len);
-
+            
         	// If the command name is unique, then it will not be found in the search
         	// above, and output == NULL.
         	if (output == NULL) {
