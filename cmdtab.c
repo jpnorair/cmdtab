@@ -255,23 +255,23 @@ cmdtab_item_t* cmdtab_search_insert(cmdtab_t* table, const char *cmdname, bool d
         	char* newcmd_name;
         
         	// Allocate the new command name
-            // Be sure to add space (+1) for string terminator, and place it
+            // Be sure to add space (+1) for string terminator, and place it.
+            // This implementation allocates on 32 bit alignment
         	newcmd_len = strlen(cmdname);
 			if (newcmd_len > CMDTAB_NAME_MAX) {
 				newcmd_len = CMDTAB_NAME_MAX;
 			}
-        	newcmd_name = malloc(newcmd_len+1);
+        	newcmd_name = calloc( (newcmd_len+4)/4, 4 );
         	if (newcmd_name == NULL) {
         		return NULL;
         	}
-            newcmd_name[newcmd_len] = 0;
-			strncpy(newcmd_name, cmdname, newcmd_len);
+			strcpy(newcmd_name, cmdname);
             
         	// If the command name is unique, then it will not be found in the search
         	// above, and output == NULL.
         	if (output == NULL) {
         		cci += (csc > 0);
-        		for (int i=table->size; i>cci; i--) {
+        		for (int i=(int)table->size; i>cci; i--) {
         			head[i] = head[i-1];
         		}
         		
