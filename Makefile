@@ -42,6 +42,7 @@ OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJE
 all: lib
 lib: resources $(PRODUCTS)
 remake: cleaner all
+pkg: lib install
 	
 #Make the Directories
 install:
@@ -95,6 +96,6 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
 
 #Non-File Targets
-.PHONY: all lib remake clean cleaner resources
+.PHONY: all lib pkg remake clean cleaner resources
 
 
