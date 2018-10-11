@@ -139,16 +139,13 @@ int cmdtab_add(cmdtab_t* table, const char* name, void* action, void* extcmd) {
 int cmdtab_list(cmdtab_t* table, char* dst, size_t dstmax) {
     int i;
     int chars_out = 0;
-    
     for (i=0; i<table->size; i++) {
         int name_size;
         name_size   = strlen(table->cmd[i]->name);
-        chars_out  += name_size;
-        
+        chars_out  += (name_size+1);
         if (chars_out < dstmax) {
             dst     = stpncpy(dst, table->cmd[i]->name, name_size);
-            dst[0]  = '\n';
-            dst++;
+            *dst++  = '\n';
         }
         else {
             break;
