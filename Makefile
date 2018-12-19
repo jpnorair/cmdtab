@@ -9,11 +9,11 @@ PACKAGEDIR  ?= ./../_hbpkg/$(THISMACHINE)/cmdtab.$(VERSION)
 ifeq ($(THISSYSTEM),Darwin)
 # Mac can't do conditional selection of static and dynamic libs at link time.
 #	PRODUCTS := libcmdtab.dylib libcmdtab.a
-	PRODUCTS := libcmdtab.$(THISSYSTEM).a
-	
+	PRODUCTS := libcmdtab.a
 else ifeq ($(THISSYSTEM),Linux)
-	PRODUCTS := libcmdtab.$(THISSYSTEM).so libcmdtab.$(THISSYSTEM).a
-	
+	PRODUCTS := libcmdtab.$(THISSYSTEM).so libcmdtab.a
+else ifeq ($(THISSYSTEM),CYGWIN_NT-10.0)
+	PRODUCTS := libcmdtab.a
 else
 	error "THISSYSTEM set to unknown value: $(THISSYSTEM)"
 endif
@@ -72,12 +72,8 @@ cleaner: clean
 #Pull in dependency info for *existing* .o files
 -include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
 
-#Build the static library
-libcmdtab.Darwin.a: $(OBJECTS)
-	ar -rcs $(PRODUCTDIR)/libcmdtab.a $(OBJECTS)
-	ranlib $(PRODUCTDIR)/libcmdtab.a
-
-libcmdtab.Linux.a: $(OBJECTS)
+#Build the static library: universal on all POSIX
+libcmdtab.a: $(OBJECTS)
 	ar -rcs $(PRODUCTDIR)/libcmdtab.a $(OBJECTS)
 	ranlib $(PRODUCTDIR)/libcmdtab.a
 
