@@ -19,6 +19,11 @@ LD := ld
 THISMACHINE ?= $(shell uname -srm | sed -e 's/ /-/g')
 THISSYSTEM	?= $(shell uname -s)
 
+EXT_INC     ?= 
+EXT_LIBINC  ?= 
+EXT_LIBFLAGS?=
+EXT_LIBS    ?= 
+
 VERSION     ?= 0.1.0
 PACKAGEDIR  ?= ./../_hbpkg/$(THISMACHINE)/cmdtab.$(VERSION)
 
@@ -26,6 +31,9 @@ ifeq ($(THISSYSTEM),Darwin)
 # Mac can't do conditional selection of static and dynamic libs at link time.
 #	PRODUCTS := libcmdtab.dylib libcmdtab.a
 	PRODUCTS := libcmdtab.a
+	EXT_INC := -I/opt/homebrew/include $(EXT_INC)
+	EXT_LIBINC := -L/opt/homebrew/lib $(EXT_LIBINC)
+	
 else ifeq ($(THISSYSTEM),Linux)
 	PRODUCTS := libcmdtab.$(THISSYSTEM).so libcmdtab.a
 else ifeq ($(THISSYSTEM),CYGWIN_NT-10.0)
